@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — MemberSpace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.css">
+</head>
+<body>
+<div class="auth-layout">
+  <!-- Visual Side -->
+  <div class="auth-visual">
+    <div class="auth-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <span class="logo-text">MemberSpace</span>
+    </div>
+
+    <div class="auth-tagline">
+      <h1>Gérez votre<br>communauté avec<br>précision.</h1>
+      <p>Une plateforme centralisée pour administrer, connecter et suivre vos membres.</p>
+    </div>
+
+    <div class="auth-stats">
+      <div class="stat-item">
+        <div class="stat-number" id="stat-count">—</div>
+        <div class="stat-label">Membres actifs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Sécurisé</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Side -->
+  <div class="auth-form-side">
+    <div class="auth-form-container">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+        <div>
+          <h2>Bon retour</h2>
+          <p>Connectez-vous à votre espace</p>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+          <svg id="theme-icon-login" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="login-error" class="toast" style="display:none;margin-bottom:1rem;" class="error"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Numéro de téléphone</label>
+          <input type="tel" name="phone" class="form-input" placeholder="Ex: 0700000000" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <div style="position:relative">
+            <input type="password" name="password" id="login-password" class="form-input" placeholder="••••••••" required style="padding-right:3rem">
+            <button type="button" onclick="togglePassword('login-password')" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted)">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:0.5rem">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          Se connecter
+        </button>
+      </form>
+
+      <div class="divider"><span>Nouveau membre ?</span></div>
+
+      <a href="/register" class="btn btn-secondary btn-full">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <line x1="20" y1="8" x2="20" y2="14"/>
+          <line x1="23" y1="11" x2="17" y2="11"/>
+        </svg>
+        Créer un compte
+      </a>
+
+      <p style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:2rem">
+        Compte admin de démo : +2250711118582 / Qwerty
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+  // Theme
+  const theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  }
+
+  function togglePassword(id) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+  }
+
+  // Load member count
+  fetch('/api/admin/stats', { credentials: 'include' })
+    .then(r => r.json())
+    .then(d => { if (d.total !== undefined) document.getElementById('stat-count').textContent = d.total; })
+    .catch(() => {});
+
+  // Login form
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.disabled = true;
+    btn.textContent = 'Connexion...';
+
+    const data = Object.fromEntries(new FormData(e.target));
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      window.location.href = result.user.role === 'admin' ? '/admin' : '/dashboard';
+    } else {
+      showToast(result.error || 'Identifiants incorrects', 'error');
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Se connecter`;
+    }
+  });
+
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span class="toast-icon">${type === 'success' ? '&#10003;' : '&#10005;'}</span> ${msg}`;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  // Redirect if already logged
+  fetch('/api/auth/me', { credentials: 'include' })
+    .then(r => r.json())
+    .then(u => { if (u.id) window.location.href = u.role === 'admin' ? '/admin' : '/dashboard'; })
+    .catch(() => {});
+</script>
+</body>
+</html>

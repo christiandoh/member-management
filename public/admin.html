@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration — MemberSpace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-badge">
+          <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <span>MemberSpace</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Administration</div>
+      <button class="nav-item active" onclick="showSection('dashboard')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Tableau de bord
+      </button>
+      <button class="nav-item" onclick="showSection('members')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Membres
+      </button>
+      <button class="nav-item" onclick="showSection('stats')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Statistiques
+      </button>
+
+      <div class="nav-section-title">Compte</div>
+      <button class="nav-item" onclick="logout()">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnexion
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div style="width:36px;height:36px;background:rgba(200,169,110,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Administrateur</div>
+          <div class="sidebar-user-role">Accès complet</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" onclick="openSidebar()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <span class="topbar-title" id="topbar-title">Tableau de bord</span>
+      <div class="topbar-actions">
+        <span id="last-refresh" style="font-size:0.8rem;color:var(--text-muted)"></span>
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <svg id="theme-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- DASHBOARD SECTION -->
+      <section class="page-section active" id="section-dashboard">
+        <div style="margin-bottom:2rem">
+          <h1>Tableau de bord</h1>
+          <p>Vue d'ensemble de la plateforme</p>
+        </div>
+
+        <div class="stats-grid stagger">
+          <div class="stat-card">
+            <div class="stat-card-icon gold">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value" id="stat-total">—</div>
+              <div class="stat-card-label">Total membres</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon blue">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value" id="stat-male">—</div>
+              <div class="stat-card-label">Hommes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon pink">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value" id="stat-female">—</div>
+              <div class="stat-card-label">Femmes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon green">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value" id="stat-married">—</div>
+              <div class="stat-card-label">Mariés</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick charts -->
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card-header"><h3>Répartition par genre</h3></div>
+            <div class="chart-container"><canvas id="gender-chart-dash"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Situation matrimoniale</h3></div>
+            <div class="chart-container"><canvas id="marital-chart-dash"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Latest registrations -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Dernières inscriptions</h3>
+            <button class="btn btn-secondary" onclick="showSection('members')" style="font-size:0.85rem;padding:0.5rem 1rem">
+              Voir tous
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Membre</th>
+                  <th>Téléphone</th>
+                  <th>Genre</th>
+                  <th>Situation</th>
+                  <th>Date d'inscription</th>
+                </tr>
+              </thead>
+              <tbody id="latest-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMBERS SECTION -->
+      <section class="page-section" id="section-members">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+          <div>
+            <h2>Gestion des membres</h2>
+            <p>Liste complète des membres inscrits</p>
+          </div>
+          <div class="search-bar">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="form-input" placeholder="Rechercher un membre..." id="admin-search" oninput="filterTable(this.value)">
+          </div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Membre</th>
+                  <th>Téléphone</th>
+                  <th>Genre</th>
+                  <th>Situation</th>
+                  <th>Rôle</th>
+                  <th>Inscription</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-members-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS SECTION -->
+      <section class="page-section" id="section-stats">
+        <div style="margin-bottom:2rem">
+          <h2>Statistiques détaillées</h2>
+          <p>Analyse approfondie des données membres</p>
+        </div>
+
+        <div class="charts-grid" style="grid-template-columns:1fr">
+          <div class="card">
+            <div class="card-header"><h3>Inscriptions mensuelles</h3></div>
+            <div class="chart-container" style="height:300px"><canvas id="monthly-chart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card-header"><h3>Genre — Détail</h3></div>
+            <div class="chart-container"><canvas id="gender-chart-stats"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Situation matrimoniale — Détail</h3></div>
+            <div class="chart-container"><canvas id="marital-chart-stats"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal" style="max-width:380px;text-align:center">
+    <div style="width:56px;height:56px;background:rgba(224,82,82,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+      <svg width="26" height="26" fill="none" stroke="var(--danger)" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+    </div>
+    <h3 style="margin-bottom:0.5rem">Supprimer le membre</h3>
+    <p id="delete-name" style="margin-bottom:1.5rem;font-weight:500;color:var(--text-primary)"></p>
+    <p style="margin-bottom:1.5rem;font-size:0.9rem">Cette action est irréversible. Toutes les données du membre seront supprimées.</p>
+    <div style="display:flex;gap:0.75rem">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()" style="flex:1">Annuler</button>
+      <button class="btn btn-danger" id="confirm-delete-btn" style="flex:1">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Supprimer
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+  const theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  function toggleTheme() {
+    const c = document.documentElement.getAttribute('data-theme');
+    const n = c === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('theme', n);
+    updateChartsTheme();
+  }
+
+  const genderMap = { male: 'Homme', female: 'Femme', other: 'Autre' };
+  const maritalMap = { single: 'Célibataire', married: 'Marié(e)', divorced: 'Divorcé(e)', widowed: 'Veuf/Veuve' };
+
+  let allUsers = [];
+  let statsData = {};
+  let charts = {};
+
+  async function init() {
+    const res = await fetch('/api/auth/me', { credentials: 'include' });
+    if (!res.ok) { window.location.href = '/'; return; }
+    const me = await res.json();
+    if (me.role !== 'admin') { window.location.href = '/dashboard'; return; }
+    await Promise.all([loadUsers(), loadStats()]);
+    document.getElementById('last-refresh').textContent = `Actualisé à ${new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' })}`;
+  }
+
+  async function loadUsers() {
+    const res = await fetch('/api/admin/users', { credentials: 'include' });
+    allUsers = await res.json();
+    renderAdminTable(allUsers);
+    renderLatestTable(allUsers.filter(u => u.role === 'member').slice(0, 5));
+  }
+
+  async function loadStats() {
+    const res = await fetch('/api/admin/stats', { credentials: 'include' });
+    statsData = await res.json();
+    document.getElementById('stat-total').textContent = statsData.total;
+    document.getElementById('stat-male').textContent = statsData.male;
+    document.getElementById('stat-female').textContent = statsData.female;
+    document.getElementById('stat-married').textContent = statsData.married;
+    renderCharts();
+  }
+
+  function getChartColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+      text: isDark ? '#a0a0a0' : '#6b6b6b',
+      grid: isDark ? '#2a2a2a' : '#e2e1db',
+    };
+  }
+
+  function renderCharts() {
+    const { text, grid } = getChartColors();
+    const genderData = {
+      labels: ['Hommes', 'Femmes', 'Autre'],
+      datasets: [{
+        data: [statsData.male, statsData.female, statsData.total - statsData.male - statsData.female],
+        backgroundColor: ['rgba(82,130,224,0.8)', 'rgba(224,82,140,0.8)', 'rgba(155,155,155,0.6)'],
+        borderColor: ['#5282e0', '#e0528c', '#9b9b9b'],
+        borderWidth: 2,
+      }]
+    };
+
+    const maritalData = {
+      labels: ['Célibataire', 'Marié(e)', 'Divorcé(e)', 'Veuf/Veuve'],
+      datasets: [{
+        data: [statsData.single, statsData.married, statsData.divorced, statsData.widowed],
+        backgroundColor: ['rgba(200,169,110,0.8)', 'rgba(76,175,125,0.8)', 'rgba(224,82,82,0.7)', 'rgba(155,155,155,0.6)'],
+        borderColor: ['#c8a96e', '#4caf7d', '#e05252', '#9b9b9b'],
+        borderWidth: 2,
+      }]
+    };
+
+    const doughnutOpts = {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: text, padding: 16, font: { family: 'DM Sans', size: 12 } } }
+      },
+      cutout: '60%',
+    };
+
+    if (charts.genderDash) charts.genderDash.destroy();
+    if (charts.maritalDash) charts.maritalDash.destroy();
+    if (charts.genderStats) charts.genderStats.destroy();
+    if (charts.maritalStats) charts.maritalStats.destroy();
+    if (charts.monthly) charts.monthly.destroy();
+
+    charts.genderDash = new Chart(document.getElementById('gender-chart-dash'), { type: 'doughnut', data: genderData, options: doughnutOpts });
+    charts.maritalDash = new Chart(document.getElementById('marital-chart-dash'), { type: 'doughnut', data: maritalData, options: doughnutOpts });
+    charts.genderStats = new Chart(document.getElementById('gender-chart-stats'), { type: 'doughnut', data: genderData, options: doughnutOpts });
+    charts.maritalStats = new Chart(document.getElementById('marital-chart-stats'), { type: 'doughnut', data: maritalData, options: doughnutOpts });
+
+    // Monthly bar chart
+    const monthly = statsData.monthly || [];
+    const monthlyLabels = monthly.map(m => {
+      const [y, mo] = m.month.split('-');
+      return new Date(y, mo - 1).toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' });
+    }).reverse();
+    const monthlyCounts = monthly.map(m => Number(m.count)).reverse();
+
+    charts.monthly = new Chart(document.getElementById('monthly-chart'), {
+      type: 'bar',
+      data: {
+        labels: monthlyLabels,
+        datasets: [{
+          label: 'Inscriptions',
+          data: monthlyCounts,
+          backgroundColor: 'rgba(200,169,110,0.7)',
+          borderColor: '#c8a96e',
+          borderWidth: 2,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: grid }, ticks: { color: text, font: { family: 'DM Sans' } } },
+          y: { grid: { color: grid }, ticks: { color: text, font: { family: 'DM Sans' }, stepSize: 1 }, beginAtZero: true },
+        }
+      }
+    });
+  }
+
+  function updateChartsTheme() {
+    renderCharts();
+  }
+
+  function renderAdminTable(users) {
+    const tbody = document.getElementById('admin-members-tbody');
+    if (!users.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucun membre trouvé</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = users.map(u => {
+      const initials = u.firstName[0] + u.lastName[0];
+      const avatar = u.photo
+        ? `<img src="${u.photo}" class="table-avatar" alt="${u.firstName}">`
+        : `<div class="table-avatar" style="display:flex;align-items:center;justify-content:center;background:var(--accent-light);font-family:var(--font-display);font-size:0.75rem;font-weight:700;color:var(--accent)">${initials}</div>`;
+      const roleBadge = u.role === 'admin'
+        ? `<span class="member-badge" style="background:rgba(200,169,110,0.15);color:var(--accent)">Admin</span>`
+        : `<span class="member-badge" style="background:var(--bg-input);color:var(--text-muted)">Membre</span>`;
+      return `<tr>
+        <td><div class="table-name-cell">${avatar}<span>${u.firstName} ${u.lastName}</span></div></td>
+        <td>${u.phone}</td>
+        <td>${genderMap[u.gender] || u.gender}</td>
+        <td>${maritalMap[u.maritalStatus] || u.maritalStatus}</td>
+        <td>${roleBadge}</td>
+        <td>${new Date(u.createdAt).toLocaleDateString('fr-FR')}</td>
+        <td>
+          ${u.role !== 'admin' ? `
+          <button class="btn btn-danger btn-icon" onclick="confirmDelete(${u.id}, '${u.firstName} ${u.lastName}')" title="Supprimer">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>` : `<span style="color:var(--text-muted);font-size:0.8rem">—</span>`}
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderLatestTable(users) {
+    const tbody = document.getElementById('latest-tbody');
+    tbody.innerHTML = users.map(u => {
+      const initials = u.firstName[0] + u.lastName[0];
+      const avatar = u.photo
+        ? `<img src="${u.photo}" class="table-avatar" alt="${u.firstName}">`
+        : `<div class="table-avatar" style="display:flex;align-items:center;justify-content:center;background:var(--accent-light);font-family:var(--font-display);font-size:0.75rem;font-weight:700;color:var(--accent)">${initials}</div>`;
+      return `<tr>
+        <td><div class="table-name-cell">${avatar}<span>${u.firstName} ${u.lastName}</span></div></td>
+        <td>${u.phone}</td>
+        <td>${genderMap[u.gender] || u.gender}</td>
+        <td>${maritalMap[u.maritalStatus] || u.maritalStatus}</td>
+        <td>${new Date(u.createdAt).toLocaleDateString('fr-FR')}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function filterTable(query) {
+    const q = query.toLowerCase();
+    const filtered = allUsers.filter(u =>
+      u.firstName.toLowerCase().includes(q) ||
+      u.lastName.toLowerCase().includes(q) ||
+      u.phone.includes(q)
+    );
+    renderAdminTable(filtered);
+  }
+
+  let deleteTargetId = null;
+  function confirmDelete(id, name) {
+    deleteTargetId = id;
+    document.getElementById('delete-name').textContent = name;
+    document.getElementById('delete-modal').classList.add('open');
+  }
+  function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.remove('open');
+    deleteTargetId = null;
+  }
+  document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
+    if (!deleteTargetId) return;
+    const btn = document.getElementById('confirm-delete-btn');
+    btn.disabled = true; btn.textContent = 'Suppression...';
+    const res = await fetch(`/api/admin/users/${deleteTargetId}`, { method: 'DELETE', credentials: 'include' });
+    const result = await res.json();
+    if (result.success) {
+      allUsers = allUsers.filter(u => u.id !== deleteTargetId);
+      renderAdminTable(allUsers);
+      showToast('Membre supprimé avec succès', 'success');
+      await loadStats();
+    } else {
+      showToast('Erreur lors de la suppression', 'error');
+    }
+    closeDeleteModal();
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg> Supprimer`;
+  });
+
+  // Navigation
+  const sectionTitles = { dashboard: 'Tableau de bord', members: 'Membres', stats: 'Statistiques' };
+  function showSection(name) {
+    ['dashboard', 'members', 'stats'].forEach(s => {
+      document.getElementById(`section-${s}`).classList.remove('active');
+    });
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(`section-${name}`).classList.add('active');
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(el => {
+      const text = el.textContent.trim();
+      if (name === 'dashboard' && text.includes('bord')) el.classList.add('active');
+      if (name === 'members' && text.includes('Membres')) el.classList.add('active');
+      if (name === 'stats' && text.includes('Statistiques')) el.classList.add('active');
+    });
+    document.getElementById('topbar-title').textContent = sectionTitles[name];
+    closeSidebar();
+  }
+
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('open');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+  }
+
+  async function logout() {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    window.location.href = '/';
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span>${type === 'success' ? '&#10003;' : '&#9888;'}</span> ${msg}`;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  init();
+</script>
+</body>
+</html>

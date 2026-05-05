@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — MemberSpace</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-badge">
+          <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <span>MemberSpace</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Navigation</div>
+      <button class="nav-item active" onclick="showSection('home')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Accueil
+      </button>
+      <button class="nav-item" onclick="showSection('members')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Membres
+      </button>
+      <button class="nav-item" onclick="showSection('profile')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Mon Profil
+      </button>
+
+      <div class="nav-section-title">Compte</div>
+      <button class="nav-item" onclick="logout()">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnexion
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar-wrap">
+          <svg width="20" height="20" fill="none" stroke="rgba(200,169,110,0.6)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-name">Chargement...</div>
+          <div class="sidebar-user-role">Membre</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" onclick="openSidebar()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <span class="topbar-title" id="topbar-title">Accueil</span>
+      <div class="topbar-actions">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <svg id="theme-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- HOME SECTION -->
+      <section class="page-section active" id="section-home">
+        <div style="margin-bottom:2rem">
+          <h1 id="welcome-msg">Bonjour !</h1>
+          <p>Bienvenue sur votre espace personnel</p>
+        </div>
+
+        <div class="stats-grid stagger">
+          <div class="stat-card">
+            <div class="stat-card-icon gold">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value" id="total-members">—</div>
+              <div class="stat-card-label">Total membres</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon blue">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value" id="member-since">—</div>
+              <div class="stat-card-label">Membre depuis</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon green">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <div class="stat-card-value">Actif</div>
+              <div class="stat-card-label">Statut du compte</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent members preview -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Membres récents</h3>
+            <button class="btn btn-secondary" onclick="showSection('members')" style="font-size:0.85rem;padding:0.5rem 1rem">
+              Voir tous
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="members-grid stagger" id="recent-members-grid">
+            <div class="empty-state">
+              <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <p>Chargement des membres...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMBERS SECTION -->
+      <section class="page-section" id="section-members">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+          <div>
+            <h2>Tous les membres</h2>
+            <p>Découvrez les autres membres de la communauté</p>
+          </div>
+          <div class="search-bar">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="form-input" placeholder="Rechercher..." id="member-search" oninput="filterMembers(this.value)">
+          </div>
+        </div>
+        <div class="members-grid stagger" id="all-members-grid">
+          <div class="empty-state">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <p>Chargement...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE SECTION -->
+      <section class="page-section" id="section-profile">
+        <div style="margin-bottom:2rem">
+          <h2>Mon Profil</h2>
+          <p>Consultez et modifiez vos informations personnelles</p>
+        </div>
+
+        <div class="profile-hero" id="profile-hero">
+          <div class="profile-hero-avatar" id="profile-avatar-display">
+            <svg width="40" height="40" fill="none" stroke="var(--accent)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="profile-hero-info">
+            <h2 id="profile-fullname">—</h2>
+            <p id="profile-phone">—</p>
+            <p id="profile-joined" style="margin-top:4px;font-size:0.8rem;opacity:0.5">—</p>
+          </div>
+          <button class="btn btn-primary" onclick="openEditModal()" style="margin-left:auto;z-index:1">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Modifier
+          </button>
+        </div>
+
+        <div class="profile-details stagger">
+          <div class="detail-item">
+            <div class="detail-label">Prénom</div>
+            <div class="detail-value" id="detail-firstname">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Nom</div>
+            <div class="detail-value" id="detail-lastname">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Téléphone</div>
+            <div class="detail-value" id="detail-phone">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Genre</div>
+            <div class="detail-value" id="detail-gender">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Situation matrimoniale</div>
+            <div class="detail-value" id="detail-marital">—</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Membre depuis</div>
+            <div class="detail-value" id="detail-since">—</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Modifier le profil</h3>
+      <button class="modal-close" onclick="closeEditModal()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form id="edit-form" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="form-label">Photo de profil</label>
+        <div class="photo-upload-area" style="padding:1.5rem">
+          <input type="file" name="photo" accept="image/*" onchange="previewEditPhoto(this)">
+          <img id="edit-photo-preview" style="width:60px;height:60px;border-radius:50%;object-fit:cover;display:none;margin:0 auto 0.75rem">
+          <div id="edit-upload-placeholder" style="text-align:center">
+            <div class="photo-upload-icon" style="margin:0 auto 0.5rem">
+              <svg width="20" height="20" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted)">Changer la photo</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prénom</label>
+          <input type="text" name="firstName" id="edit-firstname" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom</label>
+          <input type="text" name="lastName" id="edit-lastname" class="form-input" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Téléphone</label>
+        <input type="tel" name="phone" id="edit-phone" class="form-input" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Genre</label>
+          <select name="gender" id="edit-gender" class="form-select">
+            <option value="male">Homme</option>
+            <option value="female">Femme</option>
+            <option value="other">Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Situation matrimoniale</label>
+          <select name="maritalStatus" id="edit-marital" class="form-select">
+            <option value="single">Célibataire</option>
+            <option value="married">Marié(e)</option>
+            <option value="divorced">Divorcé(e)</option>
+            <option value="widowed">Veuf / Veuve</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nouveau mot de passe <span style="color:var(--text-muted)">(laisser vide pour ne pas changer)</span></label>
+        <input type="password" name="password" class="form-input" placeholder="••••••••" minlength="6">
+      </div>
+      <div style="display:flex;gap:0.75rem;margin-top:1rem">
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()" style="flex:1">Annuler</button>
+        <button type="submit" class="btn btn-primary" id="edit-submit-btn" style="flex:2">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+  // Theme
+  const theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  function toggleTheme() {
+    const c = document.documentElement.getAttribute('data-theme');
+    const n = c === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('theme', n);
+  }
+
+  let currentUser = null;
+  let allMembers = [];
+
+  // Label maps
+  const genderMap = { male: 'Homme', female: 'Femme', other: 'Autre' };
+  const maritalMap = { single: 'Célibataire', married: 'Marié(e)', divorced: 'Divorcé(e)', widowed: 'Veuf / Veuve' };
+
+  // Auth check
+  async function init() {
+    const res = await fetch('/api/auth/me', { credentials: 'include' });
+    if (!res.ok) { window.location.href = '/'; return; }
+    currentUser = await res.json();
+    if (currentUser.role === 'admin') { window.location.href = '/admin'; return; }
+    renderUserInfo();
+    loadMembers();
+  }
+
+  function renderUserInfo() {
+    const u = currentUser;
+    document.getElementById('welcome-msg').textContent = `Bonjour, ${u.firstName} !`;
+    document.getElementById('sidebar-name').textContent = `${u.firstName} ${u.lastName}`;
+    const since = new Date(u.createdAt);
+    document.getElementById('member-since').textContent = since.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+
+    // Sidebar avatar
+    const wrap = document.getElementById('sidebar-avatar-wrap');
+    if (u.photo) {
+      wrap.innerHTML = `<img src="${u.photo}" alt="Avatar" style="width:36px;height:36px;border-radius:50%;object-fit:cover">`;
+    }
+
+    // Profile section
+    document.getElementById('profile-fullname').textContent = `${u.firstName} ${u.lastName}`;
+    document.getElementById('profile-phone').textContent = u.phone;
+    document.getElementById('profile-joined').textContent = `Membre depuis le ${since.toLocaleDateString('fr-FR')}`;
+    document.getElementById('detail-firstname').textContent = u.firstName;
+    document.getElementById('detail-lastname').textContent = u.lastName;
+    document.getElementById('detail-phone').textContent = u.phone;
+    document.getElementById('detail-gender').textContent = genderMap[u.gender] || u.gender;
+    document.getElementById('detail-marital').textContent = maritalMap[u.maritalStatus] || u.maritalStatus;
+    document.getElementById('detail-since').textContent = since.toLocaleDateString('fr-FR');
+
+    const avatarDisplay = document.getElementById('profile-avatar-display');
+    if (u.photo) {
+      avatarDisplay.innerHTML = `<img src="${u.photo}" alt="Photo">`;
+    } else {
+      avatarDisplay.textContent = u.firstName[0] + u.lastName[0];
+    }
+  }
+
+  async function loadMembers() {
+    const res = await fetch('/api/members', { credentials: 'include' });
+    allMembers = await res.json();
+    document.getElementById('total-members').textContent = allMembers.length;
+    renderMembersGrid('recent-members-grid', allMembers.slice(0, 6));
+    renderMembersGrid('all-members-grid', allMembers);
+  }
+
+  function renderMembersGrid(containerId, members) {
+    const grid = document.getElementById(containerId);
+    if (!members.length) {
+      grid.innerHTML = `<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>Aucun membre trouvé</p></div>`;
+      return;
+    }
+    grid.innerHTML = members.map(m => {
+      const initials = m.firstName[0] + m.lastName[0];
+      const avatar = m.photo
+        ? `<div class="member-avatar"><img src="${m.photo}" alt="${m.firstName}"></div>`
+        : `<div class="member-avatar">${initials}</div>`;
+      const gBadge = m.gender === 'male' ? 'badge-male' : m.gender === 'female' ? 'badge-female' : '';
+      const mBadge = `badge-${m.maritalStatus}`;
+      return `
+        <div class="member-card">
+          ${avatar}
+          <div class="member-name">${m.firstName} ${m.lastName}</div>
+          <div class="member-meta">${genderMap[m.gender] || m.gender}</div>
+          <span class="member-badge ${gBadge}">${genderMap[m.gender] || m.gender}</span>
+          <span class="member-badge ${mBadge}">${maritalMap[m.maritalStatus] || m.maritalStatus}</span>
+        </div>`;
+    }).join('');
+  }
+
+  function filterMembers(query) {
+    const q = query.toLowerCase();
+    const filtered = allMembers.filter(m =>
+      m.firstName.toLowerCase().includes(q) ||
+      m.lastName.toLowerCase().includes(q)
+    );
+    renderMembersGrid('all-members-grid', filtered);
+  }
+
+  // Navigation
+  const sections = ['home', 'members', 'profile'];
+  const titles = { home: 'Accueil', members: 'Membres', profile: 'Mon Profil' };
+
+  function showSection(name) {
+    sections.forEach(s => {
+      document.getElementById(`section-${s}`).classList.remove('active');
+    });
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(`section-${name}`).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(el => {
+      if (el.textContent.trim().toLowerCase().includes(titles[name].toLowerCase().split(' ')[0].toLowerCase())) {
+        el.classList.add('active');
+      }
+    });
+    document.getElementById('topbar-title').textContent = titles[name];
+    closeSidebar();
+  }
+
+  // Sidebar mobile
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('open');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+  }
+
+  // Edit modal
+  function openEditModal() {
+    const u = currentUser;
+    document.getElementById('edit-firstname').value = u.firstName;
+    document.getElementById('edit-lastname').value = u.lastName;
+    document.getElementById('edit-phone').value = u.phone;
+    document.getElementById('edit-gender').value = u.gender;
+    document.getElementById('edit-marital').value = u.maritalStatus;
+    if (u.photo) {
+      document.getElementById('edit-photo-preview').src = u.photo;
+      document.getElementById('edit-photo-preview').style.display = 'block';
+      document.getElementById('edit-upload-placeholder').style.display = 'none';
+    }
+    document.getElementById('edit-modal').classList.add('open');
+  }
+  function closeEditModal() {
+    document.getElementById('edit-modal').classList.remove('open');
+  }
+
+  function previewEditPhoto(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('edit-photo-preview').src = e.target.result;
+        document.getElementById('edit-photo-preview').style.display = 'block';
+        document.getElementById('edit-upload-placeholder').style.display = 'none';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  document.getElementById('edit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('edit-submit-btn');
+    btn.disabled = true; btn.textContent = 'Enregistrement...';
+
+    const formData = new FormData(e.target);
+    // Remove empty password
+    if (!formData.get('password')) formData.delete('password');
+
+    const res = await fetch('/api/members/profile', {
+      method: 'PUT', credentials: 'include', body: formData,
+    });
+    const result = await res.json();
+    if (result.id) {
+      currentUser = { ...currentUser, ...result };
+      renderUserInfo();
+      closeEditModal();
+      showToast('Profil mis à jour avec succès', 'success');
+    } else {
+      showToast(result.error || 'Erreur de mise à jour', 'error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Enregistrer`;
+  });
+
+  async function logout() {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    window.location.href = '/';
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span>${type === 'success' ? '&#10003;' : '&#9888;'}</span> ${msg}`;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  init();
+</script>
+</body>
+</html>

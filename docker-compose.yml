@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: memberspace-app
+    ports:
+      - "4999:4999"
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - JWT_SECRET=change-this-secret-in-production
+      - PORT=4999
+      - NODE_ENV=production
+    volumes:
+      - uploads_data:/app/uploads
+      - db_data:/app/prisma
+    restart: unless-stopped
+
+volumes:
+  uploads_data:
+  db_data:
